@@ -3,8 +3,8 @@ name: Build Release Binaries
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*" # 推送以 v 开头的标签时触发，例如 v1.0.0
 
 jobs:
   build:

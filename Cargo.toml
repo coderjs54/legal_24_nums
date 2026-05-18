@@ -1,6 +1,6 @@
 [package]
 name = "legal_24_nums"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 author = "coderjs54"
 default-run = "legal_24_nums"
