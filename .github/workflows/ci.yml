@@ -6,6 +6,9 @@ on:
     tags:
       - "v*" # 推送以 v 开头的标签时触发，例如 v1.0.0
 
+permissions:
+  contents: write # 给整个工作流授予写入权限
+
 jobs:
   build:
     name: Build on ${{ matrix.os }}

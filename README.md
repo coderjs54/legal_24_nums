@@ -53,3 +53,26 @@ $ legal_24_nums --start 1 --end 20 --file
 
 - `src/lib.rs` - 核心库函数
 - `src/main.rs` - 命令行入口
+- `benches/` - 基准测试文件
+
+## 基准测试
+
+使用 Criterion 库进行性能基准测试，以下是测试结果：
+
+| 测试场景 | 平均耗时 |
+|---------|---------|
+| get_all_legal_nums 1-10 | 3.08 ms |
+| get_all_legal_nums 1-13 | 8.62 ms |
+| get_all_legal_nums 1-15 | 15.64 ms |
+
+### 运行基准测试
+
+```bash
+cargo bench
+```
+
+基准测试报告将生成在 `target/criterion/report/index.html`，包含详细的性能图表和统计数据，包括：
+- 性能统计数据（均值、中位数、标准差等）
+- 迭代时间分布图
+- 性能变化对比图
+- 异常值检测
