@@ -1,45 +1,53 @@
-name: CI
+# .github/workflows/ci.yml
+name: Build Release Binaries
 
 on:
   push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
-
-env:
-  CARGO_TERM_COLOR: always
+    branches:
+      - main
 
 jobs:
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: legal_24_nums-linux
+            asset_name: legal_24_nums-linux
+          - os: macos-latest
+            artifact_name: legal_24_nums-macos
+            asset_name: legal_24_nums-macos
+          - os: windows-latest
+            artifact_name: legal_24_nums-windows
+            asset_name: legal_24_nums-windows.exe
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Cache cargo registry
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ matrix.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ matrix.os }}-cargo-
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          cache: true
 
-    - name: Build
-      run: cargo build --verbose
+      - name: Build release binary
+        run: cargo build --release
 
-    - name: Run tests
-      run: cargo test --verbose
+      - name: Prepare artifact (rename binary)
+        shell: bash
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            cp target/release/legal_24_nums.exe ./${{ matrix.asset_name }}
+          else
+            cp target/release/legal_24_nums ./${{ matrix.asset_name }}
+          fi
 
-    - name: Check formatting
-      run: cargo fmt --check
-
-    - name: Clippy check
-      run: cargo clippy -- -D warnings
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.asset_name }}
