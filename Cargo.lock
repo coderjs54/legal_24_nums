@@ -330,11 +330,12 @@ dependencies = [
 
 [[package]]
 name = "legal_24_nums"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "criterion",
  "rayon",
+ "serde",
  "serde_json",
 ]
 
